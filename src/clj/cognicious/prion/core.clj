@@ -1,8 +1,10 @@
 (ns cognicious.prion.core
-  (:import [cognicious.prion PrionTransformer] 
-           [javassist ClassPool CtClass CtMethod] 
-           [java.io ByteArrayInputStream]
-           [java.lang.instrument ClassFileTransformer Instrumentation])
+  (:require [aleph.http :as aleph-http]
+            [cognicious.prion.state :refer [app]])
+  (:import  [cognicious.prion PrionTransformer] 
+            [javassist ClassPool CtClass CtMethod] 
+            [java.io ByteArrayInputStream]
+            [java.lang.instrument ClassFileTransformer Instrumentation])
   (:gen-class
    :methods [^:static [premain [String java.lang.instrument.Instrumentation] void]]))
 
@@ -11,6 +13,17 @@
                    ;(.importPackage "cognicious.prion")
                    )]
   (defn -premain [^String args ^Instrumentation instrumentation]
-    (println "Loading premain")
+    (println (str "                                                 \n"
+                  "                          _/                     \n"
+                  "     _/_/_/    _/  _/_/        _/_/    _/_/_/    \n"
+                  "    _/    _/  _/_/      _/  _/    _/  _/    _/   \n"
+                  "   _/    _/  _/        _/  _/    _/  _/    _/    \n"
+                  "  _/_/_/    _/        _/    _/_/    _/    _/     \n"
+                  " _/                                              \n"
+                  "_/                                               \n"))
+
+    (aleph-http/start-server app {:port 8080})
+    (def ins11n instrumentation)
+
     (-> instrumentation
         (.addTransformer (PrionTransformer. class-pool)))))

@@ -27,7 +27,7 @@ public class PrionTransformer implements ClassFileTransformer {
         try {
             
             if (className.startsWith("java/lang/invoke/")
-                || className.startsWith("cognicious/prion/")) {
+                || className.startsWith("cognicious/prion")) {
                 return null;
             }
             
@@ -38,10 +38,12 @@ public class PrionTransformer implements ClassFileTransformer {
                   //  if (!method.isEmpty()) {
                     //region instrument method
                     method.insertBefore(" { " +   
-                                        "cognicious.prion.PrionRegister.begin(\"" + className + "\",\"" + method.getName() + "\"); " +
-                                        "System.out.println(\"" + className + "." + method.getName() + "\"); " +
+                                        "cognicious.prion.PrionRegister.propagate(\"" + className + "\",\"" + method.getName() + "\"); " +
+                                        //"System.out.println(\"" + className + "." + method.getName() + "\"); " +
                                         "}");
-                    //method.insertAfter("{ Stack.pop(); }", true);
+                    method.insertAfter("{ "+
+                                       "cognicious.prion.PrionRegister.propagate(\"" + className + "\",\"" + method.getName() + "\"); " +
+                                       " }", true);
                     //endregion
                     //}
                 //}
@@ -49,7 +51,7 @@ public class PrionTransformer implements ClassFileTransformer {
             
             return ct.toBytecode();
         } catch (Throwable e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return classfileBuffer;
         }
     }
