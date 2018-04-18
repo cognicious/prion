@@ -20,10 +20,9 @@
                   "   _/    _/  _/        _/  _/    _/  _/    _/    \n"
                   "  _/_/_/    _/        _/    _/_/    _/    _/     \n"
                   " _/                                              \n"
-                  "_/                                               \n"))
+                  "_/                          :port 8080           \n"))
 
     (aleph-http/start-server app {:port 8080})
-    (def ins11n instrumentation)
 
     (-> instrumentation
         (.addTransformer (PrionTransformer. class-pool)))))
